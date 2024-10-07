@@ -61,7 +61,8 @@ while run:
         keys = pygame.key.get_pressed()
         if keys[pygame.K_SPACE] and player_y == ground_y:
             player_velocity_y = jump_strength
-        
+
+    #teken de speler
     pygame.draw.rect(screen, BLUE, (player_x, player_y, player_width, player_height))
 
     pygame.display.flip()
