@@ -30,7 +30,7 @@ JUMP_TIMER = 0.07
 
 # alle variablen die met de wereld te maken hebben###
 gravity = 0.4
-huidig_level = 2
+huidig_level = 1
 #####################################################
 
 # variabelen voor het scrollen#######################
@@ -190,10 +190,10 @@ class Player:
                     toekomstige_rect.x += self.dx  # Simuleer nieuwe x-positie
                     toekomstige_rect.y += self.dy
                     if toekomstige_rect.colliderect(tile[1]):
-                        break
+                        return None
                     if pos == len(blokken.obstakels) - 1:
                         blokken.beweeg_alles(scherm_scroll)
-                self.dx -= self.dx
+                        self.dx -= self.dx
                 return scherm_scroll
 
         if self.rect.x < SCROLL_LIM:
@@ -204,10 +204,10 @@ class Player:
                     toekomstige_rect.x += self.dx  # Simuleer nieuwe x-positie
                     toekomstige_rect.y += self.dy
                     if toekomstige_rect.colliderect(tile[1]):
-                        break
+                        return None
                     if pos == len(blokken.obstakels) - 1:
                         blokken.beweeg_alles(scherm_scroll)
-                self.dx -= self.dx
+                        self.dx -= self.dx
                 return scherm_scroll
 
     def kan_springen(self):
@@ -312,7 +312,7 @@ class Blocks_met_Collision():
 
     def beweeg_alles(self, dx):
         for tile_data in self.obstakels:
-            tile_data[1].x -= dx * 1/ 2
+            tile_data[1].x -= int(dx/2)
 
     def teken_obstakels(self):
         for tile_data in self.obstakels:
@@ -324,22 +324,35 @@ wereld = Wereld()
 player = wereld.process_data(wereld_data)
 blokken = Blocks_met_Collision(wereld.obstacle_list)
 
-
-run = True
-while run:
+if huidig_level != 2:
     clock.tick(60) # FPS
-    scherm.fill((176, 106, 204)) # zorgt ervoor dat het scherm voor elke frame opnieuw wordt opgevuld
+    scherm.fill((0, 0, 0)) # zorgt ervoor dat het scherm voor elke frame opnieuw wordt opgevuld
     bg.update()
-    player.movement()
     wereld.teken_obstakels()
     player.update()
 
 
-    # print(player.rect.x//16)
-    # print(player.rect.y//16)
+
+    cam_pos = 7000
+    print(cam_pos)
+
+    blokken.beweeg_alles(cam_pos)
+    pygame.display.update()
+
+
+run = True
+while run:
+    clock.tick(60) # FPS
+    scherm.fill((0, 0, 0)) # zorgt ervoor dat het scherm voor elke frame opnieuw wordt opgevuld
+    bg.update()
+    wereld.teken_obstakels()
+    player.update()
+
+    # print(player.rect.x)
+    # print(player.rect.y)
+
     try:
         if player.movement() is not None:
-            # scherm_scroll = player.movement()
             achtergrond_scroll += player.movement() * 0.3
         else:
             scherm_scroll = 0
